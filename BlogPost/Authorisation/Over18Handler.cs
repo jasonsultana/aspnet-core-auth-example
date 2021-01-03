@@ -24,11 +24,6 @@ namespace BlogPost.Authorisation
 
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, Over18Requirement requirement)
         {
-            var contextUser =  _httpContextAccessor.HttpContext.User;
-            
-            var identity = (ClaimsIdentity)context.User.Identity;
-            IEnumerable<Claim> claims = identity.Claims;
-            
             if (context.User.HasClaim(c => c.Type == nameof(LoginViewModel.Age)))
             {
                 var ageClaim = context.User.Claims.Single(c => c.Type == nameof(LoginViewModel.Age)).Value;
