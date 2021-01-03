@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8"/>
@@ -24,12 +25,41 @@
                     <li class="nav-item">
                         <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Beer">Beer</a>
+                    </li>
+                    <li class="nav-item">
+                        @if (!User.Claims.Any())
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Login">Login</a>
+                        }
+                        else
+                        {
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Logout">Logout @User.Claims.Single(c => c.Type == "Name").Value</a>
+                        }
+                    </li>
                 </ul>
             </div>
         </div>
     </nav>
 </header>
 <div class="container">
+    @if (TempData.ContainsKey("message"))
+    {   
+        <div class="alert-danger">
+            @TempData["message"]
+        </div>
+    }
+    
+    <div>
+        <h4>Claims</h4>
+        <ul>
+            @foreach(var claim in User.Claims)
+            {
+                <li>@claim.Type : @claim.Value</li>
+            }
+        </ul>
+    </div>
     <main role="main" class="pb-3">
         @RenderBody()
     </main>
